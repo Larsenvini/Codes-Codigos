@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_ITEMS 100
+#define MAX_NAME_LENGTH 50
+
+// Struct para armazenar informações de cada item
+typedef struct {
+    int codigo;
+    char nome[MAX_NAME_LENGTH];
+    char marca[MAX_NAME_LENGTH];
+    int quantidade;
+    float preco_unitario;
+    float preco_total;
+} Item;
+
+// Função para calcular o preço total de um item e aplicar desconto se necessário
+void calcular_preco_total(Item *item) {
+    item->preco_total = item->quantidade * item->preco_unitario;
+    if (item->quantidade >= 3) {
+        item->preco_total *= 0.9; // Aplicar desconto de 10%
+    }
+}
+
+// Função para ordenar itens por valor total em ordem decrescente
+void ordenar_itens_por_valor(Item *itens, int n) {
+    int i, j;
+    Item temp;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (itens[j].preco_total < itens[j + 1].preco_total) {
+                temp = itens[j];
+                itens[j] = itens[j + 1];
+                itens[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    FILE *arquivo;
+    Item itens[MAX_ITEMS];
+    int total_itens = 0;
+    float faturamento_total = 0;
+    int total_clientes = 0;
+    int i;
+
+    arquivo = fopen("loja_roupa.dat", "wb");
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return 1;
+    }
+
+    // Capturar entrada de dados e calcular preços
+    char continuar;
+    do {
+        printf("Digite o codigo do item: ");
+        scanf("%d", &itens[total_itens].codigo);
+        printf("Digite o nome do item: ");
+        scanf("%s", itens[total_itens].nome);
+        printf("Digite a marca do item: ");
+        scanf("%s", itens[total_itens].marca);
+        printf("Digite a quantidade de itens: ");
+        scanf("%d", &itens[total_itens].quantidade);
+        printf("Digite o preco unitario do item: ");
+        scanf("%f", &itens[total_itens].preco_unitario);
+
+        // Calcular preço total do item
+        calcular_preco_total(&itens[total_itens]);
+
+        // Escrever item no arquivo
+        fwrite(&itens[total_itens], sizeof(Item), 1, arquivo);
+
+        faturamento_total += itens[total_itens].preco_total; // Atualiza o faturamento total aqui
+        total_itens++;
+        total_clientes++;
+
+        printf("Deseja cadastrar outro item? (s/n): ");
+        scanf(" %c", &continuar);
+    } while (continuar == 's' && total_itens < MAX_ITEMS);
+
+    fclose(arquivo);
+
+    // Ordenar itens por valor total em R$
+    ordenar_itens_por_valor(itens, total_itens);
+
+    // Imprimir relatório de vendas em ordem decrescente de valor total
+    printf("\nLista de todas as vendas realizadas no dia (em ordem decrescente de valor):\n");
+    printf("Codigo | Nome | Marca | Quantidade | Preco Total\n");
+    for (i = 0; i < total_itens; i++) {
+        printf("%6d | %-20s | %-20s | %10d | R$%.2f\n", itens[i].codigo, itens[i].nome, itens[i].marca, itens[i].quantidade, itens[i].preco_total);
+    }
+
+    return 0;
+}
