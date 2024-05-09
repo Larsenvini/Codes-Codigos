@@ -1,4 +1,5 @@
-
+*/
+ENG
 For use with a Rain Sensor with an analog out!
 
 To test view the output, point a serial monitor such as Putty at your Arduino. 
@@ -6,7 +7,14 @@ To test view the output, point a serial monitor such as Putty at your Arduino.
   - If the Sensor Board is completely soaked; "case 0" will be activated and " Flood " will be sent to the serial monitor.
   - If the Sensor Board has water droplets on it; "case 1" will be activated and " Rain Warning " will be sent to the serial monitor.
   - If the Sensor Board is dry; "case 2" will be activated and " Not Raining " will be sent to the serial monitor. 
+PORT
+Para uso com um sensor de chuva com saída analógica!
 
+Para testar a visualização da saída, aponte um monitor serial como o Putty para o seu Arduino.
+
+   - Se a Placa do Sensor estiver completamente encharcada; "case 0" será ativado e "Flood" será enviado para o monitor serial.
+   - Se a Placa do Sensor apresentar gotas de água; O "caso 1" será ativado e o "Aviso de Chuva" será enviado ao monitor serial.
+   - Se a Placa do Sensor estiver seca; "case 2" será ativado e "Not Raining" será enviado para o monitor serial.
 */
 #include <Wire.h> // Library for I2C communication
 #include <LiquidCrystal_I2C.h>
